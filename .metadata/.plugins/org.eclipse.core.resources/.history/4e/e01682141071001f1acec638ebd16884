@@ -1,0 +1,175 @@
+package com.hostelservice.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hostelservice.dao.HostelRepository;
+import com.hostelservice.dao.StaffRepository;
+import com.hostelservice.dto.StaffDto;
+import com.hostelservice.exception.DuplicateEntryException;
+import com.hostelservice.exception.InternalServerException;
+import com.hostelservice.exception.ResourceNotFoundException;
+import com.hostelservice.model.Hostel;
+
+import com.hostelservice.model.Staff;
+import com.hostelservice.service.StaffService;
+
+@Service
+public class StaffServiceImpl implements StaffService
+{
+	@Autowired
+	ModelMapper modelMapper;
+
+	@Autowired
+	HostelRepository hostelRepo;
+
+	@Autowired
+	StaffRepository staffRepo;
+
+	// To get All Details of Staff
+	public ResponseEntity<List<StaffDto>> getStaffDetails(String hostelName) {
+	
+			return ResponseEntity.status(HttpStatus.OK).body(staffRepo.findByHostelName(hostelName).stream()
+					.map(s -> modelMapper.map(s, StaffDto.class)).collect(Collectors.toList()));
+	}
+	
+	// To add the staff
+	@Transactional
+	public ResponseEntity<String> addStaff(StaffDto staffDto) {
+
+		String hostelName = staffDto.getHostel().getHostelName();
+		Optional<Hostel> hostel = hostelRepo.findByHostelName(hostelName);
+
+		if (hostel.isEmpty()) {
+			throw new ResourceNotFoundException("Hostel not found with name: " + hostelName);
+		} else {
+			Optional<Staff> sm = staffRepo.findByHostelNameAndMobile(staffDto.getHostel().getHostelName(),
+					staffDto.getMobile());
+			Optional<Staff> se = staffRepo.findByHostelNameAndEmail(staffDto.getHostel().getHostelName(),
+					staffDto.getEmail());
+			if (sm.isEmpty() && se.isEmpty()) {
+				Staff staff = modelMapper.map(staffDto, Staff.class);
+				staff.setHostel(hostel.get());
+				staffRepo.save(staff);
+				return ResponseEntity.status(HttpStatus.CREATED).body("Staff Details added successfully");
+			} else {
+				throw new DuplicateEntryException("email or mobile exists in staff details");
+			}
+
+		}
+
+	}
+	
+	public ResponseEntity<StaffDto> getStaffDetailsById(Long staffId)
+	{
+		Optional<Staff> staff=staffRepo.findById(staffId);
+		if(staff.isEmpty())
+			throw new ResourceNotFoundException("ID Not Found");
+		else
+			return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(staff.get(), StaffDto.class));
+	}
+	
+//	//To Update the Staff Details By mobile number
+//	@Transactional
+//	public ResponseEntity<String> updateStaffByMobile(String hostelName, String staffMobile, StaffDto staffDto) {
+//		List<Staff> staffList = staffRepo.findByHostelName(hostelName);
+//		if (staffList.isEmpty())
+//			throw new ResourceNotFoundException("Hostel Not Found to update the Room " + hostelName);
+//
+//		else {
+//			Optional<Staff> staff = staffList.stream().filter(r -> r.getMobile().equals(staffMobile)).findFirst();
+//			if (staff.isPresent()) {
+//				if (!staffDto.getMobile().equals(staff.get().getMobile())) {
+//					Optional<Staff> sf = staffRepo.findByHostelNameAndEmail(hostelName, staffDto.getEmail());
+//					if (sf.isEmpty()) {
+//						Staff s = staff.get();
+//						s.setName(staffDto.getName());
+//						s.setMobile(staffDto.getMobile());
+//						s.setEmail(staffDto.getEmail());
+//						s.setFatherName(staffDto.getFatherName());
+//						s.setPermanantAddress(staffDto.getPermanantAddress());
+//						s.setDateOfJoining(staffDto.getDateOfJoining());
+//						s.setDesignation(staffDto.getDesignation());
+//						staffRepo.save(s);
+//					} else {
+//						throw new DuplicateEntryException("email already exists");
+//					}
+//
+//				} else {
+//					throw new DuplicateEntryException("Mobile already exists");
+//				}
+//			}
+//			return ResponseEntity.status(HttpStatus.CREATED).body("updated "+staffDto.getName() +" Details");
+//		}
+//	}
+	
+	// To Update the Staff Details By Id
+	@Transactional
+	public ResponseEntity<String> updateStaffById(Long staffId, StaffDto staffDto) {
+		Optional<Staff> existingStaff = staffRepo.findById(staffId);
+		if (existingStaff.isEmpty())
+			throw new ResourceNotFoundException("ID not found: " + staffId);
+
+		else {
+			Staff s =existingStaff.get();
+			s.setName(staffDto.getName());
+			s.setMobile(staffDto.getMobile());
+			s.setEmail(staffDto.getEmail());
+			s.setFatherName(staffDto.getFatherName());
+			s.setPermanantAddress(staffDto.getPermanantAddress());
+			s.setDateOfJoining(staffDto.getDateOfJoining());
+			s.setDesignation(staffDto.getDesignation());
+			s.setAltmobileno(staffDto.getAltmobile());
+			staffRepo.save(s);
+			return ResponseEntity.status(HttpStatus.CREATED).body("updated " + staffId + " Details");
+		}
+
+	}
+	
+//	// To delete the staff by mobile number
+//	@Transactional
+//	public 	ResponseEntity<String> deleteStaffByMobile(String hostelName, String staffMobile)
+//	{
+//		List<Staff> staffList = staffRepo.findByHostelName(hostelName);
+//		if (staffList.isEmpty())
+//			throw new ResourceNotFoundException("Hostel Not Found to delete the room" + hostelName);
+//
+//		else {
+//			Optional<Staff> staff = staffList.stream().filter(r -> r.getMobile().equals(staffMobile)).findFirst();
+//			if (staff.isPresent()) {
+//				staffRepo.delete(staff.get());
+//				return ResponseEntity.status(HttpStatus.NO_CONTENT)
+//						.body("Staff Details Deleted SuccessFully with name "+staff.get().getName());
+//			} else
+//				throw new ResourceNotFoundException(
+//						"Staff Not found with " + staffMobile + " in " + hostelName + " to delete");
+//
+//		}
+//	}
+
+	//To delete Staff by Id
+	@Transactional
+	public ResponseEntity<String> deleteStaffById(Long staffId) {
+		Optional<Staff> existingStaff = staffRepo.findById(staffId);
+		if (existingStaff.isEmpty())
+			throw new ResourceNotFoundException("ID not found: " + staffId);
+
+		else {
+			staffRepo.delete(existingStaff.get());
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted" + staffId + " Details");
+		}
+
+	}
+	
+}
+	
+	
+
