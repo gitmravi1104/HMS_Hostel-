@@ -10,7 +10,7 @@ const StaffHome = () => {
   const [showAddStaff,setshowAddStaff] = useState(false);
   const [showUpdateStaff,setShowUpdateStaff] = useState(false);
   const [staffData,setStaffData] = useState([]);
-
+  const [searchTerm,setSearchTerm] = useState('');
 
   const HandleNewStaff = () => {
     setshowAddStaff(true);
@@ -251,6 +251,17 @@ const StaffHome = () => {
     }
   }
 
+  const HandleSearchChange = (e) =>{
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredData = searchTerm 
+  ? staffData.filter(data =>
+    data.name.includes(searchTerm) || data.mobileno.includes(searchTerm) || data.designation.includes(searchTerm))
+  : staffData;
+
+  const notFound = searchTerm && staffData === 0
+
   return (
     <div className='container-fluid mt-3'>
       <h4 className='fs-semibold text-secondary'>Staff Management</h4>
@@ -260,6 +271,25 @@ const StaffHome = () => {
         </div>
         <div className='mt-2 ms-3'>
             <h5 className='fs-semibold text-secondary'>All Staff Details</h5>
+            <div className='row'>
+              <div className='col-6 my-3'>
+                <input
+                  type="search"
+                  className="form-control w-75 ms-lg-5"
+                  placeholder="Search by Name or Mobile No. or Designation"
+                  value={searchTerm}
+                  onChange={HandleSearchChange}
+                />
+                {notFound && <h5 className='text-danger mt-3 text-center'>No Staff Found.</h5>}
+                {searchTerm && !notFound && (
+                  <h5 className="text-dark mt-3 text-center">{filteredData.length} Staff Found.</h5>
+                  )}
+              </div>
+              <div className='col-6 my-3 d-flex justify-content-end'>
+                <p className='fw-semibold fs-5 me-lg-3'>Total Number of Staff : <span className='fw-bold'> &nbsp;{staffData.length}</span></p>
+              </div>
+            </div>
+            {!notFound && filteredData.length > 0 && (
             <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
             <thead className='text-center'>
                 <tr>
@@ -295,6 +325,7 @@ const StaffHome = () => {
               }
             </tbody>
             </table>
+            )}
         </div>
       </div>
       <Modal show={showAddStaff} onHide={handleClose} backdrop="static" className=''>

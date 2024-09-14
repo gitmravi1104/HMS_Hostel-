@@ -9,6 +9,7 @@ const RoomManagement = () => {
   const [showAddRoom,setShowAddRoom] = useState(false);
   const [showUpdateRoom,setShowUpdateRoom] = useState(false);
   const [roomsData,setRoomsData] = useState([]);
+  const [searchTerm,setSearchTerm] = useState('');
 
   const [roomField,setRoomField] = useState({
     roomId:'',
@@ -148,6 +149,16 @@ const RoomManagement = () => {
     FetchRooms();
   }, []);
 
+  const HandleSearchChange = (e) =>{
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredData = searchTerm
+    ? roomsData.filter(data =>
+      data.roomNumber.includes(searchTerm) || data.sharing.includes(searchTerm))
+    : roomsData ;
+
+  const notFound = searchTerm && roomsData.length === 0 
 
   return (
     <div className='container-fluid mt-3'>
@@ -159,6 +170,25 @@ const RoomManagement = () => {
       </div>
       <div className='mt-2 ms-3'>
         <h5 className='fs-semibold text-secondary'>All Room Details</h5>
+        <div className='row'>
+          <div className='col-6 my-3'>
+            <input
+              type="search"
+              className="form-control w-75 ms-lg-5"
+              placeholder="Search by Room No. or Sharing"
+              value={searchTerm}
+              onChange={HandleSearchChange}
+            />
+            {notFound && <h5 className='text-danger mt-3 text-center'>No Rooms Found.</h5>}
+            {searchTerm && !notFound && (
+              <h5 className="text-dark mt-3 text-center">{filteredData.length} Room Found.</h5>
+              )}
+          </div>
+          <div className='col-6 my-3 d-flex justify-content-end'>
+            <p className='fw-semibold fs-5 me-lg-3'>Total Number of Rooms : <span className='fw-bold'> &nbsp;{roomsData.length}</span></p>
+          </div>
+        </div>
+        {!notFound && filteredData.length > 0 && (
         <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
           <thead className='text-center'>
             <tr>
@@ -172,7 +202,7 @@ const RoomManagement = () => {
           </thead>
           <tbody>
             {
-              roomsData.map((item,index) => (
+              filteredData.map((item,index) => (
                 <tr key={item.id} className='text-dark'>
                   <td className='text-center'>{index + 1}</td>
                   <td className='text-center'>{item.roomNumber}</td>
@@ -190,6 +220,7 @@ const RoomManagement = () => {
             }
           </tbody>
         </table>
+        )}
       </div>
       <div className='container-fluid'>
       <Modal show={showAddRoom} onHide={handleClose} backdrop="static">

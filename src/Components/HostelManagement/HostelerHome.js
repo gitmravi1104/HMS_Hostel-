@@ -12,6 +12,7 @@ const HostelerHome = () => {
   const [hostelerData,setHostelerData] = useState([]);
   const [showUpdateHosteler,setShowUpdateHosteler] = useState(false);
   const [roomData,setRoomData] = useState([]);
+  const [searchTerm,setSearchTerm] = useState('');
 
   const [hosteler,setHosteler] = useState({
     hostelerid:'',
@@ -282,6 +283,17 @@ const HostelerHome = () => {
     GetAllRooms();
   },[])
 
+  const HandleSearchChange = (e) =>{
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredData = searchTerm 
+    ? hostelerData.filter(data =>
+      data.name.includes(searchTerm) || data.mobileno.includes(searchTerm) || data.roomno.includes(searchTerm))
+    : hostelerData;
+
+  const notFound = searchTerm && hostelerData === 0
+
   return (
     <div className='container-fluid mt-3'>
       <h3 className='fs-bold text-secondary'>Hosteler Management</h3>
@@ -291,6 +303,25 @@ const HostelerHome = () => {
         </div>
         <div className='mt-2 ms-3'>
           <h5 className='fs-semibold text-secondary'>All Hosteler's Details</h5>
+          <div className='row'>
+            <div className='col-6 my-3'>
+              <input
+                type="search"
+                className="form-control w-75 ms-lg-5"
+                placeholder="Search by Name or Mobile No. or Room No."
+                value={searchTerm}
+                onChange={HandleSearchChange}
+              />
+              {notFound && <h5 className='text-danger mt-3 text-center'>No Hostelers Found.</h5>}
+              {searchTerm && !notFound && (
+                <h5 className="text-dark mt-3 text-center">{filteredData.length} Hosteler Found.</h5>
+                )}
+            </div>
+            <div className='col-6 my-3 d-flex justify-content-end'>
+              <p className='fw-semibold fs-5 me-lg-3'>Total Number of Hostelers : <span className='fw-bold'> &nbsp;{hostelerData.length}</span></p>
+            </div>
+          </div>
+          {!notFound && filteredData.length > 0 && (
           <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
             <thead className='text-center'>
               <tr>
@@ -307,7 +338,7 @@ const HostelerHome = () => {
             </thead>
             <tbody className=''>
               {
-                hostelerData.map((item,index)=>(
+                filteredData.map((item,index)=>(
                   <tr className=''>
                     <td>{index+1}</td>
                     <td>{item.hostlerRoomNo}</td>
@@ -328,6 +359,7 @@ const HostelerHome = () => {
               }
             </tbody>
           </table>
+          )}
         </div>
       </div>
       <Modal show={showAddHosteler} onHide={HandleClose} backdrop="static" className=''>
