@@ -16,7 +16,7 @@ public class RoomDto
 	
 	private String roomNumber;
 	
-	private String active;
+	private boolean active;
 	
 	private String sharing;
 	

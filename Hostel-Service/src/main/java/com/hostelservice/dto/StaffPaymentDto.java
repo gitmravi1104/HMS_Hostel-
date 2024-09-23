@@ -9,17 +9,17 @@ import lombok.Data;
 @Data
 public class StaffPaymentDto 
 {	
-	private String Name;
+	private String name;
 	
-	private String Mobile; 
+	private String mobile; 
 	 
-	private String Email; 
+	private String email; 
 
 //	private LocalDate Month;
 	
 	private String advPayment;
 	
-	private LocalDate paymentDate;
+	private String paymentDate;
 	
 	private String designation; 
 

@@ -1,4 +1,4 @@
-
+/* 
   .App {
     background-image: url('./Components/images/room1.jpg');
     background-size: cover;
@@ -19,4 +19,94 @@
   }
   table{
     opacity: 0.8;
+  } */
+
+  .custom-modal {
+    height: 100%;
+    max-width: 90%; /* Adjust this value to your preferred width */
+    width: 100%;
+    
   }
+  
+  .custom-modal-dialog {
+    max-width: 1200px; /* Set a maximum width if needed */
+    margin-left: 150px;
+   
+  }
+
+  
+.custom-modal-header {
+  cursor: move; /* Indicates the modal is draggable */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+}
+  .custom-modal-body {
+    max-height: 80vh; /* Adjust height as needed */
+    overflow-y: auto; /* Enable scrolling within the body */
+    padding: 20px;
+  }
+  
+
+
+  /* Styling the row and button */
+.staff-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+}
+
+/* Popup box styling
+.popup-box {
+  position: absolute;
+  background-color: white;
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 60px; /* Adjust to fit the content */
+
+
+/* Popup text content
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+
+/* .popup-option {
+  font-size: 12px;  /* Small text 
+  color: black;     /* Black text 
+  cursor: pointer;
+  margin: 2px 0;
+} */
+
+/* Overlay to close the popup when clicked outside 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0);
+} */
+
+.blurred {
+  filter: blur(0.3px); /* Adds a slight blur */
+  pointer-events: none; /* Disable interaction */
+  background-color: #f5f5f5; /* Gray background */
+}
+
+.blurred:hover {
+  cursor: not-allowed; 
+  border: 2px solid red; /* Changes the cursor to a "not allowed" symbol when hovering */
+}
+
+

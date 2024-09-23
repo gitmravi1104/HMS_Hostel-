@@ -30,7 +30,7 @@ public class StaffPayment
 	
 	private String advPayment;
 	
-	private LocalDate paymentDate;
+	private String paymentDate;
 	
 	private String designation; 
 

@@ -1,6 +1,6 @@
 package com.hostelservice.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.hostelservice.model.Hostel;
 
@@ -21,9 +21,17 @@ private long id;
 	
 	private String email;
 	
-	private String permanantAddress;
+	private String houseno;
 	
-	private Date dateOfJoining;
+    private String street;
+    
+    private String city;
+    
+    private String state;
+    
+    private String pincode;
+	
+	private LocalDate dateOfJoining;
 	
 	private String designation;
 	

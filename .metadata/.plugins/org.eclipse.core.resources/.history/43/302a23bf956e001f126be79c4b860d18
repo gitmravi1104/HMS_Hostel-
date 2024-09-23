@@ -1,5 +1,0 @@
-package com.hostelservice.dao;
-
-public interface HostlerRepository {
-
-}

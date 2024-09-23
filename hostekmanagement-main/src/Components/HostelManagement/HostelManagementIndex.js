@@ -15,6 +15,7 @@ import HostelerHome from './HostelerHome'
 import StaffHome from './StaffHome'
 import '../../App.css';
 
+
 const HostelManagementIndex = () => {
 
   const [activeButton, setActiveButton] = useState('');
@@ -38,7 +39,7 @@ const HostelManagementIndex = () => {
           <div>
             <h2 className='fw-bold text-center my-1 text-primary'>Hostel Management <i className="fa-solid fa-bed ms-2"></i></h2>
           </div>
-          <div className='col-2 mt-3 p-3'>
+          <div className='col-2 p-3 border border-dark border-4'>
             <div className='my-1'>
               <Link 
                 to='/' 
@@ -66,7 +67,7 @@ const HostelManagementIndex = () => {
               </Link>
             </div>
           </div>
-          <div className='col-10'>
+          <div className='col-10 border border-dark border-4 '>
             <Routes>
               <Route path='/' element={<RoomManagement/>}/>
               <Route path='/newhostler' element={<NewHosteler/>}/>
@@ -81,6 +82,7 @@ const HostelManagementIndex = () => {
               <Route path='/previousstaff' element={<PreviousStaff/>}/>
               <Route path='/hostelerhome' element={<HostelerHome/>}/>
               <Route path='/staffhome' element={<StaffHome/>}/>
+              {/* <Route path='/paymenthistory' element={<PaymentHistory/>}/> */}
             </Routes>
           </div>
         </BrowserRouter>

@@ -1,5 +1,6 @@
 package com.hostelservice.serviceimpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,10 +39,10 @@ public class HostlerServiceImpl implements HostlerService {
 	@Transactional
 	public ResponseEntity<List<HostlerDto>> getAll() {
 		List<Hostler> hostlers = hostlerRepository.findAll();
-		if (hostlers.isEmpty()) {
-			// 404
-			throw new ResourceNotFoundException("Hostlers Details are Not Existed");
-		}
+//		if (hostlers.isEmpty()) {
+//			// 404
+//			throw new ResourceNotFoundException("Hostlers Details are Not Existed");
+//		}
 		List<HostlerDto> hostlerDtos = hostlers.stream().map(hostler -> modelMapper.map(hostler, HostlerDto.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(hostlerDtos);
@@ -64,27 +65,25 @@ public class HostlerServiceImpl implements HostlerService {
 	@Override
 	@Transactional
 	public ResponseEntity<String> createHostler(HostlerDto hostlerDto) {
-//        String name = hostlerDto.getHostlerName();
-		String mobile = hostlerDto.getHostlerMobile();
-//        Optional<Hostler> existingHostler = hostlerRepository.findByHostlerNameAndHostlerMobile(name, mobile);
 
+		String hostelName = hostlerDto.getHostelName();
+		String mobile = hostlerDto.getHostlerMobile();
+		
+		Optional<Hostler> existingHostler = hostlerRepository.findByHostlerMobileAndHostelName(mobile,hostelName);
+		
+		if(existingHostler.isPresent()) {
+			throw new DuplicateEntryException("Hostler with the provided details already exists");
+		}
 		Optional<Room> room = roomRepository.findByRoomNumber(hostlerDto.getHostlerRoomNo());
-		System.err.println(hostlerDto.getHostlerRoomNo());
-		System.err.println(room.isEmpty());
 		Room rooms = room.get();
 		if (rooms.getVacancy().equals("0"))
 			throw new DuplicateEntryException(hostlerDto.getHostlerRoomNo() + " has filled");
-
-//        if(rooms.getVacancy().equals(rooms.getNoOfBeds()))
-//        	throw new DuplicateEntryException(hostlerDto.getHostlerRoomNo()+" has exced the occupency");
-//        
-
-		Optional<Hostler> existingHostler = hostlerRepository.findByHostlerMobile(mobile);
-		if (existingHostler.isPresent()) {
-			// 409
-			throw new DuplicateEntryException("Hostler with the provided details already exists");
-		}
-
+		
+//		Optional<Hostler> existingHostler = hostlerRepository.findByHostlerMobile(mobile);
+//		if (existingHostler.isPresent()) {
+//			throw new DuplicateEntryException("Hostler with the provided details already exists");
+//		}
+//		
 		Hostler hostler = modelMapper.map(hostlerDto, Hostler.class);
 		hostlerRepository.save(hostler);
 
@@ -99,6 +98,7 @@ public class HostlerServiceImpl implements HostlerService {
 	public ResponseEntity<String> deleteHostler(long id) {
 
 		Optional<Hostler> hostler = hostlerRepository.findById(id);
+		Hostler h= hostler.get();
 
 		Optional<Room> room = roomRepository.findByRoomNumber(hostler.get().getHostlerRoomNo());
 		Room rooms = room.get();
@@ -111,7 +111,7 @@ public class HostlerServiceImpl implements HostlerService {
 			throw new ResourceNotFoundException("Provided Id Details are Not Existed");
 
 		} else {
-			hostlerRepository.deleteById(id);
+			hostlerRepository.delete(h);
 			rooms.setVacancy(String.valueOf(Long.parseLong(rooms.getVacancy()) + 1));
 			roomRepository.save(rooms);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hostler Details are deleated succcessfully");
@@ -139,10 +139,10 @@ public class HostlerServiceImpl implements HostlerService {
 				String name = hostlerDto.getHostlerName();
 				String mobile = hostlerDto.getHostlerMobile();
 				String email = hostlerDto.getHostlerEmail();
-				String address = hostlerDto.getHostlerAddress();
+				
 
 				Optional<Hostler> hostlerWithNewMobile = hostlerRepository
-						.findByHostlerNameAndHostlerMobileAndHostlerAddressAndHostlerEmail(name, mobile, address,
+						.findByHostlerNameAndHostlerMobileAndHostlerEmail(name, mobile,
 								email);
 
 				if (hostlerWithNewMobile.isPresent()) {
@@ -153,7 +153,7 @@ public class HostlerServiceImpl implements HostlerService {
 
 			// Update the hostler details regardless of whether the mobile number is changed
 			// or not
-			existingHostler.setHostlerAddress(hostlerDto.getHostlerAddress());
+			
 			existingHostler.setHostlerCollegeName(hostlerDto.getHostlerCollegeName());
 			existingHostler.setHostlerEmail(hostlerDto.getHostlerEmail());
 			existingHostler.setHostlerFatherName(hostlerDto.getHostlerFatherName());
@@ -162,7 +162,9 @@ public class HostlerServiceImpl implements HostlerService {
 			existingHostler.setHostel(hostlerDto.getHostel());
 			existingHostler.setHostlerRoomNo(hostlerDto.getHostlerRoomNo());
 			existingHostler.setAltmobile(hostlerDto.getAltmobile());
-
+			existingHostler.setDateOfJoining(hostlerDto.getDateOfJoining());
+			existingHostler.setDepositeAmount(hostlerDto.getDepositeAmount());
+	
 			hostlerRepository.save(existingHostler);
 
 			return ResponseEntity.status(HttpStatus.CREATED).body("Updated Successfully");
@@ -180,10 +182,52 @@ public class HostlerServiceImpl implements HostlerService {
 				throw new ResourceNotFoundException("Mobile number with the Provided data is not available");
 			} else {
 				HostlerDto hostlerDto = modelMapper.map(hostler.get(), HostlerDto.class);
+				
 				return ResponseEntity.status(HttpStatus.OK).body(hostlerDto);
 
 			}
 		}
 
 	}
+	
+	@Override
+	public ResponseEntity<List<HostlerDto>> getHostlerByHostelName(String hostelName) {
+		if(hostelName == null)
+		{
+			throw new ResourceNotFoundException("hostelName Number is Empty");
+		}
+		else 
+		{
+			List<Hostler> hostler = hostlerRepository.findByHostelName(hostelName);
+			if(hostler.isEmpty())
+			{
+				throw new ResourceNotFoundException("Mobile number with the Provided data is not available");
+			}
+			else
+			{
+				List<HostlerDto> hostlerDtos = hostler.stream()
+					    .map(h -> {
+					        HostlerDto hostlerDto = modelMapper.map(h, HostlerDto.class);
+					        // Assuming hostlerFee has a getDateOfJoining() method
+					        LocalDate dueDate = generateDueDate(h.getDateOfJoining());
+					        hostlerDto.setDueDate(dueDate); // Set the generated due date
+					        return hostlerDto;
+					    })
+					    .collect(Collectors.toList());
+
+					return ResponseEntity.status(HttpStatus.OK).body(hostlerDtos);
+				
+			}
+		}
+	}
+	
+	 public LocalDate generateDueDate(LocalDate dateOfJoining) {
+	        LocalDate currentDate = LocalDate.now();
+	        return LocalDate.of(
+	            currentDate.getYear(), 
+	            currentDate.getMonth(), 
+	            dateOfJoining.getDayOfMonth()
+	        );
+	    }
+
 }

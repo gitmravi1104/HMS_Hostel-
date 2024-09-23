@@ -2,7 +2,7 @@ package com.hostelservice.model;
 
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -32,9 +32,17 @@ public class Staff
 	
 	private String email;
 	
-	private String permanantAddress;
+	private String houseno;
 	
-	private Date dateOfJoining;
+    private String street;
+    
+    private String city;
+    
+    private String state;
+    
+    private String pincode;
+	
+	private LocalDate dateOfJoining;
 	
 	private String designation;
 	

@@ -1,5 +1,0 @@
-package com.hostelservice.service;
-
-public interface HostlerFeeServiceInteface {
-
-}

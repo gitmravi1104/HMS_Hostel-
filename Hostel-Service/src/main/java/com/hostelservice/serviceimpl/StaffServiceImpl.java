@@ -124,7 +124,11 @@ public class StaffServiceImpl implements StaffService
 			s.setMobile(staffDto.getMobile());
 			s.setEmail(staffDto.getEmail());
 			s.setFatherName(staffDto.getFatherName());
-			s.setPermanantAddress(staffDto.getPermanantAddress());
+			s.setHouseno(staffDto.getHouseno());
+			s.setStreet(staffDto.getStreet());
+			s.setCity(staffDto.getCity());
+			s.setState(staffDto.getState());
+			s.setPincode(staffDto.getPincode());
 			s.setDateOfJoining(staffDto.getDateOfJoining());
 			s.setDesignation(staffDto.getDesignation());
 			s.setAltmobile(staffDto.getAltmobile());

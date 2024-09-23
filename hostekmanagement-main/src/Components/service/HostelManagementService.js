@@ -6,6 +6,10 @@ import axios from "axios";
 
     const Base_URI_Staff="http://localhost:8080/Hostel/Staff";
 
+    const Base_URI_Staff_Payment="http://localhost:8080/Hostel/staffPayment";
+
+    const Base_URI_Guest_Payment="http://localhost:8080/api/hostlerFee"
+
 class HostelManagementService {
 
     
@@ -38,7 +42,7 @@ class HostelManagementService {
 
 
    
-// Room Management API's
+// Hostler Management API's
    
     AddNewHostler(values)
     {
@@ -74,6 +78,36 @@ class HostelManagementService {
         return axios.get(Base_URI_Guest+"/findById/"+hostlerId);
     }
 
+    getHostlerByHostelName()
+    {
+        return axios.get(Base_URI_Guest+"/findByHostelName/SSR")
+    }
+
+    // Guest Payment API's
+
+    addPaymentDetails(paymentData)
+    {
+        return axios.post(Base_URI_Guest_Payment+"/createHostlerFee", paymentData)
+    }
+
+    getPaymentDetailsByMobile(mobileNo)
+    {
+        return axios.get(Base_URI_Guest_Payment+"/findByMobileNumber/"+mobileNo)
+    }
+
+    getPaymentDetailsByHostelName()
+    {
+        return axios.get(Base_URI_Guest_Payment+"/findByHostelname/SSR")
+    }
+
+    updatePaymentDetails(id, data)
+    {
+      return   axios.put(Base_URI_Guest_Payment+"/editHostlerFee/"+id, data)
+    }
+
+  
+
+
     
     // Staff Management API's
 
@@ -92,6 +126,28 @@ class HostelManagementService {
         return axios.put(Base_URI_Staff+"/updateStaff/"+staffId, updatedStaffData)
     }
 
+    DeleteStaff(staffid){
+        return axios.delete(Base_URI_Staff+'/delete/'+staffid);
+    }
+
+    getStaffById(staffId)
+    {
+        return axios.get(Base_URI_Staff+"/getStaffDetailsById/"+staffId);
+    }
+
+    //Staff Paymnet API's
+    getStaffPaymentDetailsByHostelName()
+    {
+        return axios.get(Base_URI_Staff_Payment+"/getStaffPaymentByHostelName/SSR")
+    }
+
+
+    addStaffPayment(data)
+    {
+        return axios.post(Base_URI_Staff_Payment+"/addStaffPayment", data)
+    }
+
+    
     
 
 

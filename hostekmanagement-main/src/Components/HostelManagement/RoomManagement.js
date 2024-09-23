@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import HostelManagement from '../service/HostelManagementService';
 import { Modal } from 'react-bootstrap';
-import axios from 'axios';
 import HostelManagementService from '../service/HostelManagementService';
 
 const RoomManagement = () => {
@@ -76,12 +74,13 @@ const RoomManagement = () => {
   
 
   const handleEditRoom = (room) => {
+    console.log(room.active)
     setRoomField({
       roomId: room.id,
       roomNumber: room.roomNumber,
       sharing: room.sharing,
       vacancy:room.vacancy,
-      active: room.isActive
+      active: room.active
     });
     setShowUpdateRoom(true);
     setShowAddRoom(false);
@@ -90,11 +89,11 @@ const RoomManagement = () => {
   const handleUpdateRoomSubmit = async (e) => {
     e.preventDefault();
     const updatedRoomData = {
+      roomId:roomField.roomId,
       roomNumber: roomField.roomNumber,
       sharing: roomField.sharing,
       vacancy:roomField.vacancy,
       active: roomField.active,
-      roomId:roomField.roomId,
       hostel:{
         hostelName:"SSR",  // need to provide the dynamic hstlName
       }
@@ -105,9 +104,7 @@ const RoomManagement = () => {
       // console.log(res1.data)
         const res= await HostelManagementService.updateRoomById(roomField.roomId, updatedRoomData); // need to provide the dynamic hstlName
         console.log(res.data);
- 
         FetchRooms();
-      
     } catch (error) {
       console.error('There was an error updating the room:', error);
       alert(error.response.data+"\n Please Contact the Owner of this page")
@@ -117,7 +114,7 @@ const RoomManagement = () => {
 
   const handleDeleteRoom = async (item) => {
     try {
-      alert("Do you want to delete room Number : "+item.roomNumber)
+          alert("Do you want to delete room Number : "+item.roomNumber)
           const res =  await HostelManagementService.deleteRoom(item.id);
      
       console.log(res.data);
@@ -134,6 +131,7 @@ const RoomManagement = () => {
       const response = await HostelManagementService.getRoomsByHostelName(); // we need to give dynamic hstlName
       if (Array.isArray(response.data)) {
         setRoomsData(response.data);
+        console.log(response.data)
       } else {
         setRoomsData([]);
         console.error("Expected array but got:", response.data);
@@ -150,17 +148,48 @@ const RoomManagement = () => {
     FetchRooms();
   }, []);
 
+  const [searchTerm,setSearchTerm] = useState('');
+  const HandleSearchChange = (e) =>{
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredData = searchTerm
+    ? roomsData.filter(data =>
+      data.roomNumber.includes(searchTerm) || data.sharing.includes(searchTerm))
+    : roomsData ;
+
+  const notFound = searchTerm && filteredData.length === 0
 
   return (
     <div className='container-fluid mt-3'>
-      <h3 className='fs-bold text-secondary'>Room Management</h3>
+      <h4 className='text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark'>Room Management</h4>
       <div className='mt-2 ms-3'>
         <div className='ms-5 mt-3'>
-          <button className='btn btn-info fw-semibold ms-5' onClick={HandleNewRoom}>Add New Room <i className="fa-solid fa-plus ms-2"></i></button>
+          <button className='btn btn-info fw-bold ' onClick={HandleNewRoom}>Add Room </button>  {/*<i className="fa-solid fa-plus ms-2"></i>*/}
         </div>
       </div>
       <div className='mt-2 ms-3'>
-        <h5 className='fs-semibold text-secondary'>All Room Details</h5>
+        <h5 className='fs-semibold fw-bold text-center'>All Room Details</h5>
+        <div className='row'>
+          <div className='col-6 my-3'>
+          <input
+              type="text"
+              className="form-control w-75 ms-lg-5"
+              placeholder="Search by Room No. or Sharing"
+              value={searchTerm}
+              onChange={HandleSearchChange}
+          
+          />
+            {notFound && <h5 className='text-danger mt-3 text-center'>No Rooms Found.</h5>}
+            {searchTerm && !notFound && (
+              <h5 className="text-dark mt-3 text-center">{filteredData.length} Room Found.</h5>
+              )}
+          </div>
+          <div className='col-6 my-3 d-flex justify-content-end'>
+            <p className='fw-semibold fs-5 me-lg-3'>Total Number of Rooms : <span className='fw-bold'> &nbsp;{roomsData.length}</span></p>
+          </div>
+        </div>
+      
         <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
           <thead className='text-center'>
             <tr>
@@ -173,8 +202,8 @@ const RoomManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {
-              roomsData.map((item,index) => (
+          {!notFound && filteredData.length > 0 && (
+              filteredData.map((item,index) => (
                 <tr key={item.id} className='text-dark'>
                   <td className='text-center'>{index + 1}</td>
                   <td className='text-center'>{item.roomNumber}</td>
@@ -189,12 +218,32 @@ const RoomManagement = () => {
                   </td>
                 </tr>
               ))
-            }
+           )}
           </tbody>
         </table>
+
+       
+       {/* {
+              filteredData.length===0 && 
+              <div>
+                 <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
+                 <thead className='text-center'>
+                     <tr>
+                          <th className='text-primary'>Sl.No</th>
+                          <th className='text-primary'>Room Number</th>
+                          <th className='text-primary'>Sharing</th>
+                          <th className='text-primary'>Status</th>
+                          <th className='text-primary'>Vacancy</th>
+                          <th className='text-primary'>Actions</th>
+                     </tr>
+                 </thead>
+                 </table>  
+                 <h3 className='text-center fw-bold '>No Data Found. Please Add Room</h3>  
+              </div>     
+          } */}
       </div>
       <div className='container-fluid'>
-      <Modal show={showAddRoom} onHide={handleClose}>
+      <Modal show={showAddRoom} onHide={handleClose} backdrop="static">
           <Modal.Header closeButton  >
             <Modal.Title> Add New Room </Modal.Title>
           </Modal.Header>
@@ -270,7 +319,7 @@ const RoomManagement = () => {
             </form>
           </Modal.Body>
         </Modal>
-        <Modal show={showUpdateRoom} onHide={handleClose} centered>
+        <Modal show={showUpdateRoom} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Update Room</Modal.Title>
         </Modal.Header>

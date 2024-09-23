@@ -19,5 +19,7 @@ public interface HostlerService {
 
 	public ResponseEntity<HostlerDto> getHostlerByMobileNo(String mobileNo);
 
+	public ResponseEntity<List<HostlerDto>> getHostlerByHostelName(String hostelName);
+
 
 }

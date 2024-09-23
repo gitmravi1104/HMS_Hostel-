@@ -1,5 +1,6 @@
 package com.hostelservice.serviceimpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,14 +13,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hostelservice.dao.HostelRepository;
+import com.hostelservice.dao.HostlerRepository;
 import com.hostelservice.dao.RoomRepository;
 import com.hostelservice.dao.StaffRepository;
 import com.hostelservice.dto.HostelDto;
+import com.hostelservice.dto.HostlerDto;
+import com.hostelservice.dto.HostlerFeeDto;
 import com.hostelservice.dto.RoomDto;
 import com.hostelservice.exception.DuplicateEntryException;
 import com.hostelservice.exception.InternalServerException;
 import com.hostelservice.exception.ResourceNotFoundException;
 import com.hostelservice.model.Hostel;
+import com.hostelservice.model.Hostler;
 import com.hostelservice.model.Room;
 import com.hostelservice.service.HostelService;
 
@@ -37,6 +42,10 @@ public class HostelServiceimpl implements HostelService {
 	
 	@Autowired
 	StaffRepository staffRepo;
+	
+	@Autowired
+	private HostlerRepository hostlerRepository;
+	
 
 	// To get All Hostels Data
 	public ResponseEntity<List<HostelDto>> getAllHostels() {
@@ -151,7 +160,7 @@ public class HostelServiceimpl implements HostelService {
 			if(r.getRoomNumber().equals(roomDto.getRoomNumber())) {
 					r.setSharing(roomDto.getSharing());
 					r.setRoomNumber(roomDto.getRoomNumber());
-					r.setActive(roomDto.getActive());
+					r.setActive(roomDto.isActive());
 					r.setVacancy(roomDto.getVacancy());
 					roomRepo.save(r);
 					return ResponseEntity.status(HttpStatus.CREATED).body("room details updated");
@@ -166,7 +175,7 @@ public class HostelServiceimpl implements HostelService {
 					
 					r.setSharing(roomDto.getSharing());
 					r.setRoomNumber(roomDto.getRoomNumber());
-					r.setActive(roomDto.getActive());
+					r.setActive(roomDto.isActive());
 					r.setVacancy(roomDto.getVacancy());
 					roomRepo.save(r);
 					return ResponseEntity.status(HttpStatus.CREATED).body("room details updated");
@@ -218,6 +227,47 @@ public class HostelServiceimpl implements HostelService {
 		}
 	}
 	
+//	@Override
+//	public ResponseEntity<List<HostlerDto>> getHostlerByMobileNo(String mobileNo) {
+//		if(mobileNo == null)
+//		{
+//			throw new ResourceNotFoundException("Mobile Number is Empty");
+//		}
+//		else 
+//		{
+//			Optional<Hostler> hostler = hostlerRepository.findByHostlerMobile(mobileNo);
+//			if(hostler.isEmpty())
+//			{
+//				throw new ResourceNotFoundException("Mobile number with the Provided data is not available");
+//			}
+//			else
+//			{
+//				List<HostlerDto> hostlerDtos = hostler.stream()
+//					    .map(h -> {
+//					        HostlerDto hostlerDto = modelMapper.map(h, HostlerDto.class);
+//					        // Assuming hostlerFee has a getDateOfJoining() method
+//					        LocalDate dueDate = generateDueDate(h.getDateOfJoining());
+//					        hostlerDto.setDueDate(dueDate); // Set the generated due date
+//					        return hostlerDto;
+//					    })
+//					    .collect(Collectors.toList());
+//
+//					return ResponseEntity.status(HttpStatus.OK).body(hostlerDtos);
+//				
+//			}
+//		}
+//		
+//	}
+//	
+//	 public LocalDate generateDueDate(LocalDate dateOfJoining) {
+//	        LocalDate currentDate = LocalDate.now();
+//	        return LocalDate.of(
+//	            currentDate.getYear(), 
+//	            currentDate.getMonth(), 
+//	            dateOfJoining.getDayOfMonth()
+//	        );
+//	    }
+//	
 	
 	
 }

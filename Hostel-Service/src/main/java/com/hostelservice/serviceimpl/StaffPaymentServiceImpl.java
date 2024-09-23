@@ -21,8 +21,7 @@ import com.hostelservice.model.StaffPayment;
 import com.hostelservice.service.StaffPaymentService;
 
 @Service
-public class StaffPaymentServiceImpl implements StaffPaymentService 
-{
+public class StaffPaymentServiceImpl implements StaffPaymentService {
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -31,43 +30,38 @@ public class StaffPaymentServiceImpl implements StaffPaymentService
 
 	@Autowired
 	StaffPaymentRepository staffPaymentRepo;
-	
+
 	// To get the staff Payment Details by hostelName
 	public ResponseEntity<List<StaffPaymentDto>> getAllPaymentsByhostelName(String hostelName) {
-		
-			List<StaffPayment> staffPaymentList = staffPaymentRepo.findByHostelName(hostelName);
-			return ResponseEntity.status(HttpStatus.OK).body(staffPaymentList.stream()
-					.map(sp -> modelMapper.map(sp, StaffPaymentDto.class)).collect(Collectors.toList()));
 
-		
+		List<StaffPayment> staffPaymentList = staffPaymentRepo.findByHostelName(hostelName);
+		return ResponseEntity.status(HttpStatus.OK).body(staffPaymentList.stream()
+				.map(sp -> modelMapper.map(sp, StaffPaymentDto.class)).collect(Collectors.toList()));
 
 	}
 
 	// To add the staff payment details
 	public ResponseEntity<String> addStaffPayment(StaffPaymentDto staffPaymentDto) {
-		Optional<Hostel> hostel = hostelRepo
-				.findByHostelName(staffPaymentDto.getHostel().getHostelName());
+		Optional<Hostel> hostel = hostelRepo.findByHostelName(staffPaymentDto.getHostel().getHostelName());
 		if (hostel.isEmpty()) {
 			throw new ResourceNotFoundException(staffPaymentDto.getHostel().getHostelName() + " was not found");
 		} else {
-			
-				StaffPayment stp= modelMapper.map(staffPaymentDto, StaffPayment.class);
-				stp.setHostel(hostel.get());
-				staffPaymentRepo.save(stp);
-				return ResponseEntity.status(HttpStatus.CREATED).body("Staff Payment Uploaded successfully");
-			
+
+			StaffPayment stp = modelMapper.map(staffPaymentDto, StaffPayment.class);
+			stp.setHostel(hostel.get());
+			staffPaymentRepo.save(stp);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Staff Payment Uploaded successfully");
+
 		}
 	}
-	
-	public ResponseEntity<StaffPaymentDto> getStaffPaymentDetailsById(Long id)
-	{
-			Optional<StaffPayment> staffPayment= staffPaymentRepo.findById(id);
-			if(staffPayment.isEmpty())
-				throw new ResourceNotFoundException("Id not Found");
-			else
-				return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(staffPayment, StaffPaymentDto.class));
-	}
 
+	public ResponseEntity<StaffPaymentDto> getStaffPaymentDetailsById(Long id) {
+		Optional<StaffPayment> staffPayment = staffPaymentRepo.findById(id);
+		if (staffPayment.isEmpty())
+			throw new ResourceNotFoundException("Id not Found");
+		else
+			return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(staffPayment, StaffPaymentDto.class));
+	}
 
 //	//To update the staffpayment details by mobileNumber
 //	public ResponseEntity<String> updateStaffPaymentByMobileNumber(String hostelName, String staffMobile,
@@ -94,23 +88,22 @@ public class StaffPaymentServiceImpl implements StaffPaymentService
 //
 //	}
 //	
-	//To update Staff Payment Details by Id
+	// To update Staff Payment Details by Id
 	@Transactional
-	public ResponseEntity<String> updateStaffPaymentById(Long staffPaymentId, StaffPaymentDto staffPaymentDto)
-	{
-			Optional<StaffPayment>	existingDetails=staffPaymentRepo.findById(staffPaymentId);
-			if(existingDetails.isEmpty())
-				throw new ResourceNotFoundException("ID not found: "+staffPaymentId);
-			else {
-				StaffPayment sp = existingDetails.get();
-				sp.setAdvPayment(staffPaymentDto.getAdvPayment());
-				sp.setDesignation(staffPaymentDto.getDesignation());
-				sp.setPaymentAmount(staffPaymentDto.getPaymentAmount());
-				sp.setPaymentDate(staffPaymentDto.getPaymentDate());
-				sp.setPaymentStatus(staffPaymentDto.getPaymentStatus());
-				staffPaymentRepo.save(sp);
-				return ResponseEntity.status(HttpStatus.CREATED).body("Staff payment updated Successfully");
-			}
+	public ResponseEntity<String> updateStaffPaymentById(Long staffPaymentId, StaffPaymentDto staffPaymentDto) {
+		Optional<StaffPayment> existingDetails = staffPaymentRepo.findById(staffPaymentId);
+		if (existingDetails.isEmpty())
+			throw new ResourceNotFoundException("ID not found: " + staffPaymentId);
+		else {
+			StaffPayment sp = existingDetails.get();
+			sp.setAdvPayment(staffPaymentDto.getAdvPayment());
+			sp.setDesignation(staffPaymentDto.getDesignation());
+			sp.setPaymentAmount(staffPaymentDto.getPaymentAmount());
+			sp.setPaymentDate(staffPaymentDto.getPaymentDate());
+			sp.setPaymentStatus(staffPaymentDto.getPaymentStatus());
+			staffPaymentRepo.save(sp);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Staff payment updated Successfully");
+		}
 	}
 
 //	//To delete the staffPayment by mobileNumber
@@ -140,5 +133,5 @@ public class StaffPaymentServiceImpl implements StaffPaymentService
 		}
 
 	}
-	
+
 }

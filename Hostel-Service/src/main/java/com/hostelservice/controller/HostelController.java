@@ -65,6 +65,7 @@ public class HostelController
 	@PutMapping("/updateRoom/{roomId}")
 	public ResponseEntity<String> updateRoomById(@PathVariable Long roomId,@RequestBody RoomDto roomDto)
 	{
+		System.err.println(roomDto);
 		return hostelService.updateRoomById(roomId,roomDto);
 	}
 	

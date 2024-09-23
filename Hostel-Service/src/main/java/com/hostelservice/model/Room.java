@@ -23,7 +23,7 @@ public class Room
 	
 	private String roomNumber;
 	
-	private String active;
+	private boolean active;
 	
 	private String sharing;
 	
