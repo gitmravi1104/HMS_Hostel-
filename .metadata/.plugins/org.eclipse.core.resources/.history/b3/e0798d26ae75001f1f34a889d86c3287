@@ -1,0 +1,56 @@
+package com.hostelservice.dto;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.hostelservice.model.Hostel;
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class HostlerDto {
+	
+    private long hostlerId;
+    
+    private String hostlerMobile;
+  
+    private String hostlerName;
+
+    private String hostlerEmail;
+
+    private String hostlerFatherName;
+
+    private String hostlerCollegeName;
+
+    private String hostlerRoomNo;
+    
+    private String dateOfJoining;
+    
+    private String altmobile;
+    
+    private String houseno;
+	
+    private String street;
+    
+    private String city;
+    
+    private String state;
+    
+    private String pincode;
+    
+    private String hostlerHostelName;
+
+    
+    
+//  @NotBlank(message = "Hostel id is required")
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
+    @JsonBackReference
+    private Hostel hostel;
+    
+    
+}
