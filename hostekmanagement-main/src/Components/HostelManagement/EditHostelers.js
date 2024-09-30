@@ -42,7 +42,7 @@ const EditHostelers = () => {
   };
   
 
-  const[HostlerData, setHostlerData]=useState([]);
+ 
 
   const fetchHostlerData = async () => {
     if (hostelerId) {
@@ -132,8 +132,8 @@ const EditHostelers = () => {
      <h4 className='fs-semibold text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark d-flex justify-content-center align-items-center position-relative '>
           Hostler Details
         <span className='position-absolute end-0 me-5 '>
-           <i className="fa-solid fa-pen-to-square" onClick={handleEditToggle}></i>
-           <i className="fa-solid fa-trash ms-2 text-danger ms-5" onClick={DeleteHosteler}></i>
+           <i className="fa-solid fa-pen-to-square cursor-pointer " onClick={handleEditToggle}></i>
+    
         </span>
       </h4>
       <div className='mt-2 ms-3 my-5'>
@@ -251,7 +251,7 @@ const EditHostelers = () => {
         <h5 className='text-primary fw-bold text-center'>Address Details</h5>
         <div className='row'>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='houseno'>House No.:</label>
+            <label className='form-label fw-bold' htmlFor='houseno'>House No:</label>
             <input
               type='text'
               name='houseno'
@@ -309,7 +309,7 @@ const EditHostelers = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='pincode'>PinCode:</label>
+            <label className='form-label fw-bold' htmlFor='pincode'>Pincode:</label>
             <input
               type='text'
               name='pincode'
@@ -393,7 +393,7 @@ const EditHostelers = () => {
                 <button
                   type='button'
                   className='btn btn-danger fw-bold  ms-5 '
-                  onClick={() => setIsEditable(false)}  // Button to cancel edit
+                  onClick={() =>{ setIsEditable(false);  fetchHostlerData(); }}  // Button to cancel edit
                 >
                   Cancel
                 </button>

@@ -38,6 +38,8 @@ public class StaffPayment
 
 	private String paymentStatus;
 	
+	private LocalDate dateOfJoining;
+	
 	@ManyToOne
 	@JoinColumn(name="hostelId")
 	@JsonBackReference

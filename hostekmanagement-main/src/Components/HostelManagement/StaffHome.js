@@ -176,15 +176,18 @@ const StaffHome = () => {
  
     try{
       const res= await HostelManagementService.addNewStaff(staffDetails);
+      const res1=await HostelManagementService.addStaffPayment(staffDetails)
+      console.log(res1.data)
       console.log(res.data);
+      handleClose();
+      getStaffDetails();
     }
     catch(error)
     {
       console.log(error);
       alert(error.response.data);
     }
-    handleClose();
-    getStaffDetails();
+
 
       
   }
@@ -291,7 +294,7 @@ const StaffHome = () => {
   return (
     <div className='container-fluid mt-3'>
       <h4 className='text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark'>Staff Management</h4>
-      <div className='mt-2 ms-3'>
+      <div className='mt-2'>
         <div className=" mt-3 d-flex justify-content-between">
             <button className="btn btn-info fw-bold px-3 ms-5" onClick={HandleNewStaff}>Add Staff</button>
             <button className='btn btn-info fw-bold px-3 me-5' onClick={()=> navigate("/staffpayment")}>Payment Details</button>
@@ -336,7 +339,7 @@ const StaffHome = () => {
                     <td>{item.name}</td>
                     <td>{item.mobile}</td>
                     <td>{item.designation}</td>
-                    <td><button className='rounded-circle' onClick={()=>HandleUpdateStaff(item)} ><i class="fa-solid fa-ellipsis"></i></button></td>
+                    <td><button className='rounded-circle' onClick={()=>HandleUpdateStaff(item)} ><i class="fa-solid fa-ellipsis"></i></button> <i className="fa-solid fa-trash text-danger ms-5 cursor-pointer" onClick={()=>DeleteStaff(item.id)}></i></td>
                 
                   </tr>
                 ))
@@ -350,7 +353,7 @@ const StaffHome = () => {
      <Modal show={showAddStaff} onHide={handleClose} backdrop="static"   dialogClassName="custom-modal-dialog" 
   className="custom-modal">
   <Modal.Header closeButton className='custom-modal-header'>
-    <Modal.Title className='fw-bold text-center'>Add staff</Modal.Title>
+    <Modal.Title className='fw-bold text-center'>Add Staff</Modal.Title>
   </Modal.Header>
   <Modal.Body className='mx-3 custom-modal-body '>
     <form className='ms-2' onSubmit={addStaffHandler}>
@@ -365,7 +368,7 @@ const StaffHome = () => {
               name='name'
               id='name'
               className='form-control'
-              placeholder='Enter staff Name'
+              placeholder='Enter Staff Name'
               value={staff.name}
               onChange={HandleChange}
               required
@@ -391,7 +394,7 @@ const StaffHome = () => {
               name='email'
               id='email'
               className='form-control'
-              placeholder='Enter Mail id'
+              placeholder='Enter Mail Id'
               value={staff.email}
               onChange={HandleChange}
               required
@@ -445,7 +448,7 @@ const StaffHome = () => {
         <h5 className='text-primary fw-bold text-center'>Address Details</h5>
         <div className='row'>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='houseno'>House No.:</label>
+            <label className='form-label fw-bold' htmlFor='houseno'>House No:</label>
             <input
               type='text'
               name='houseno'
@@ -499,7 +502,7 @@ const StaffHome = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='pincode'>PinCode:</label>
+            <label className='form-label fw-bold' htmlFor='pincode'>Pincode:</label>
             <input
               type='text'
               name='pincode'
@@ -543,7 +546,7 @@ const StaffHome = () => {
                         <option value=''>Select</option>
                         <option value="cook">Cook</option>
                         <option value="Sweeper">Sweeper</option>
-                        <option value='supervisor'>Supervisor</option>
+                        <option value='Supervisor'>Supervisor</option>
                         <option value='Helper'>Helper</option>
                     </select>
           </div>

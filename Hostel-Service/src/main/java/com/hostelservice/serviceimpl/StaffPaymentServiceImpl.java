@@ -46,12 +46,26 @@ public class StaffPaymentServiceImpl implements StaffPaymentService {
 		if (hostel.isEmpty()) {
 			throw new ResourceNotFoundException(staffPaymentDto.getHostel().getHostelName() + " was not found");
 		} else {
-
-			StaffPayment stp = modelMapper.map(staffPaymentDto, StaffPayment.class);
-			stp.setHostel(hostel.get());
-			staffPaymentRepo.save(stp);
-			return ResponseEntity.status(HttpStatus.CREATED).body("Staff Payment Uploaded successfully");
-
+			if(staffPaymentDto.getId()==0L)
+			{
+				StaffPayment stp = modelMapper.map(staffPaymentDto, StaffPayment.class);
+				stp.setHostel(hostel.get());
+				staffPaymentRepo.save(stp);
+				return ResponseEntity.status(HttpStatus.CREATED).body("Staff Payment Uploaded successfully");
+			}
+			else {
+				
+				Optional<StaffPayment> existingDetails = staffPaymentRepo.findById(staffPaymentDto.getId());
+					StaffPayment sp = existingDetails.get();
+					sp.setAdvPayment(staffPaymentDto.getAdvPayment());
+					sp.setDesignation(staffPaymentDto.getDesignation());
+					sp.setPaymentAmount(staffPaymentDto.getPaymentAmount());
+					sp.setPaymentDate(staffPaymentDto.getPaymentDate());
+					sp.setPaymentStatus(staffPaymentDto.getPaymentStatus());
+					staffPaymentRepo.save(sp);
+					return ResponseEntity.status(HttpStatus.CREATED).body("Staff payment updated Successfully");
+			}
+			
 		}
 	}
 

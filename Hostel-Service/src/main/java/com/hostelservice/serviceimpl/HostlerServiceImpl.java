@@ -164,6 +164,11 @@ public class HostlerServiceImpl implements HostlerService {
 			existingHostler.setAltmobile(hostlerDto.getAltmobile());
 			existingHostler.setDateOfJoining(hostlerDto.getDateOfJoining());
 			existingHostler.setDepositeAmount(hostlerDto.getDepositeAmount());
+			existingHostler.setHouseno(hostlerDto.getHouseno());
+			existingHostler.setStreet(hostlerDto.getStreet());
+			existingHostler.setCity(hostlerDto.getCity());
+			existingHostler.setState(hostlerDto.getState());
+			existingHostler.setPincode(hostlerDto.getPincode());
 	
 			hostlerRepository.save(existingHostler);
 

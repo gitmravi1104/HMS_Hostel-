@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class StaffPaymentDto 
 {	
+	private long id;
+	
 	private String name;
 	
 	private String mobile; 
@@ -25,7 +27,9 @@ public class StaffPaymentDto
 
 	private String paymentAmount; 
 
-	private String paymentStatus ;
+	private String paymentStatus;
+	
+	private LocalDate dateOfJoining;
 	
 	private Hostel hostel;
 

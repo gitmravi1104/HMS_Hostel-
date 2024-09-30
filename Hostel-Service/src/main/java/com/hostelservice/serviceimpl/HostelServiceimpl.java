@@ -158,10 +158,15 @@ public class HostelServiceimpl implements HostelService {
 		else {
 			Room r = room.get();
 			if(r.getRoomNumber().equals(roomDto.getRoomNumber())) {
+				Integer sharing=Integer.parseInt(r.getSharing());
+				Integer vacancy=Integer.parseInt(r.getVacancy());
+				Integer newSharing=Integer.parseInt(roomDto.getSharing());
+				Integer newVacany=newSharing-sharing+vacancy;
+				if(newVacany<0) throw new DuplicateEntryException("Adjust the room members then change room sharing");
 					r.setSharing(roomDto.getSharing());
 					r.setRoomNumber(roomDto.getRoomNumber());
 					r.setActive(roomDto.isActive());
-					r.setVacancy(roomDto.getVacancy());
+					r.setVacancy(newVacany.toString());
 					roomRepo.save(r);
 					return ResponseEntity.status(HttpStatus.CREATED).body("room details updated");
 			}

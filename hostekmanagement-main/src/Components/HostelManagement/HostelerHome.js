@@ -324,7 +324,7 @@ const HostelerHome = () => {
   return (
     <div className='container-fluid mt-3'>
       <h4 className=' text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark'>Hosteler Management</h4>
-      <div className='mt-2 ms-3'>
+      <div className='mt-2'>
       <div className=" mt-3 d-flex justify-content-between">
             <button className="btn btn-info fw-bold px-3 ms-5" onClick={HandleNewHosteler}>Add Hostler</button>
             <button className='btn btn-info fw-bold px-3 me-5' onClick={()=> navigate("/hostelersfees")}>Payment Details</button>
@@ -369,7 +369,7 @@ const HostelerHome = () => {
                     <td>{item.hostlerRoomNo}</td>
                     <td>{item.hostlerName}</td>
                     <td>{item.hostlerMobile}</td>
-                    <td><button className='rounded-circle' onClick={()=>HandleUpdateHosteler(item)}  ><i class="fa-solid fa-ellipsis"></i></button></td>
+                    <td><button className='rounded-circle' onClick={()=>HandleUpdateHosteler(item)}  ><i class="fa-solid fa-ellipsis"> </i></button><i className="fa-solid fa-trash text-danger ms-5 fw-bold cursor-pointer" onClick={()=>DeleteHosteler(item.hostlerId)}></i></td>
                   </tr>
                 ))
               )}
@@ -427,7 +427,7 @@ const HostelerHome = () => {
               name='email'
               id='email'
               className='form-control'
-              placeholder='Enter Mail id'
+              placeholder='Enter Mail Id'
               value={hosteler.email}
               onChange={HandleChange}
               required
@@ -436,7 +436,7 @@ const HostelerHome = () => {
         </div>
         <div className='row mt-2'>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='mobileno'>Mobile No.:</label>
+            <label className='form-label fw-bold' htmlFor='mobileno'>Mobile No:</label>
             <input
               type='text'
               name='mobileno'
@@ -454,7 +454,7 @@ const HostelerHome = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='altmobile'>Alternate Mobile No.:</label>
+            <label className='form-label fw-bold' htmlFor='altmobile'>Alternate Mobile No:</label>
             <input
               type='text'
               name='altmobile'
@@ -494,7 +494,7 @@ const HostelerHome = () => {
         <h5 className='text-primary fw-bold text-center'>Address Details</h5>
         <div className='row'>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='houseno'>House No.:</label>
+            <label className='form-label fw-bold' htmlFor='houseno'>House No:</label>
             <input
               type='text'
               name='houseno'
@@ -549,7 +549,7 @@ const HostelerHome = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='pincode'>PinCode:</label>
+            <label className='form-label fw-bold' htmlFor='pincode'>Pincode:</label>
             <input
               type='text'
               name='pincode'
@@ -572,7 +572,7 @@ const HostelerHome = () => {
 
       {/* Date & Room Details Section */}
       <div className='mb-3'>
-        <h5 className='text-primary fw-bold text-center'>Date & Room Details</h5>
+        <h5 className='text-primary fw-bold text-center'>Other Details</h5>
         <div className='row'>
           <div className='col-4'>
             <label className='form-label fw-bold' htmlFor='month'>DOJ:</label>
@@ -611,7 +611,7 @@ const HostelerHome = () => {
               type='text'
               name='depositeAmount'
               id='depositeAmount'
-              placeholder='Enter Deposit amount'
+              placeholder='Enter Deposit Amount'
               className='form-control '
               value={hosteler.depositeAmount}
               onChange={HandleChange}

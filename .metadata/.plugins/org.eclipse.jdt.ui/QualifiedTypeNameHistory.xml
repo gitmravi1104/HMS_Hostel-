@@ -33,7 +33,6 @@
     <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.Query"/>
     <fullyQualifiedTypeName name="com.hostelservice.model.Hostel"/>
     <fullyQualifiedTypeName name="com.hostelservice.dao.HostelRepository"/>
-    <fullyQualifiedTypeName name="com.hostelservice.exception.InternalServerException"/>
     <fullyQualifiedTypeName name="com.hostelservice.dto.RoomDto"/>
     <fullyQualifiedTypeName name="com.hostelservice.dto.StaffDto"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.GetMapping"/>
@@ -53,10 +52,11 @@
     <fullyQualifiedTypeName name="java.sql.Date"/>
     <fullyQualifiedTypeName name="jakarta.persistence.ManyToMany"/>
     <fullyQualifiedTypeName name="jakarta.persistence.JoinColumn"/>
-    <fullyQualifiedTypeName name="com.hostelservice.exception.DuplicateEntryException"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.CrossOrigin"/>
     <fullyQualifiedTypeName name="java.util.Date"/>
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="com.hostelservice.model.HostlerFee"/>
+    <fullyQualifiedTypeName name="com.hostelservice.exception.InternalServerException"/>
+    <fullyQualifiedTypeName name="com.hostelservice.exception.DuplicateEntryException"/>
 </qualifiedTypeNameHistroy>

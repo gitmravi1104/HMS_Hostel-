@@ -234,13 +234,13 @@ export default function HostelersFees() {
       <Modal show={showPaymentModal} onHide={handleClose} backdrop="static"   dialogClassName="custom-modal-dialog" 
   className="custom-modal">
   <Modal.Header closeButton>
-    <Modal.Title className='text-secondary text-center'>Add Hosteler</Modal.Title>
+    <Modal.Title className=' text-center fw-bold'>Hostler Payment Details</Modal.Title>
   </Modal.Header>
   <Modal.Body className='mx-3'>
     <form className='ms-2 ' onSubmit={HandleSubmit}>
       {/* Personal Details Section */}
       <div className='mb-3'>
-        <h5 className='text-primary text-center fw-bold'>Personal Details</h5>
+        <h5 className='text-primary text-center fw-bold'>Basic Details</h5>
         <div className='row'>
           <div className='col-4 '>
             <label className='form-label fw-bold' htmlFor='name'>Name:</label>
@@ -299,11 +299,11 @@ export default function HostelersFees() {
 
       {/* Date & Room Details Section */}
       <div className='mb-3'>
-        <h5 className='text-primary fw-bold text-center'>Date & Room Details</h5>
+        <h5 className='text-primary fw-bold text-center'>Payment Details</h5>
         <div className='row'>
      
           <div className='col-3'>
-            <label className='form-label fw-bold' htmlFor='startDate'>End Date:</label>
+            <label className='form-label fw-bold' htmlFor='startDate'>Start Date:</label>
             <input
               type='date'
               name='startDate'

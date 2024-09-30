@@ -117,7 +117,6 @@ const EditStaff = () => {
           Staff Details
         <span className='position-absolute end-0 me-5 '>
            <i className="fa-solid fa-pen-to-square" onClick={handleEditToggle}></i>
-           <i className="fa-solid fa-trash ms-2 text-danger ms-5" onClick={DeleteHosteler}></i>
         </span>
       </h4>
       <div className='mt-2 ms-3'>
@@ -140,11 +139,11 @@ const EditStaff = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='fathername'>Father's Name:</label>
+            <label className='form-label fw-bold' htmlFor='fatherName'>Father's Name:</label>
             <input
               type='text'
-              name='fathername'
-              id='fathername'
+              name='fatherName'
+              id='fatherName'
               className={`form-control ${!isEditable ? 'blurred' : ''}`}
               placeholder='Enter Father`s Name'
               value={editStaff.fatherName}
@@ -168,11 +167,11 @@ const EditStaff = () => {
         </div>
         <div className='row mt-2'>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='mobileno'>Mobile No:</label>
+            <label className='form-label fw-bold' htmlFor='mobile'>Mobile No:</label>
             <input
               type='text'
-              name='mobileno'
-              id='mobileno'
+              name='mobile'
+              id='mobile'
               className={`form-control ${!isEditable ? 'blurred' : ''}`}
               placeholder='Enter Mobile Number'
               maxLength={10}
@@ -186,11 +185,11 @@ const EditStaff = () => {
             />
           </div>
           <div className='col-4'>
-            <label className='form-label fw-bold' htmlFor='altmobileno'>Alternate Mobile No:</label>
+            <label className='form-label fw-bold' htmlFor='altmobile'>Alternate Mobile No:</label>
             <input
               type='text'
-              name='altmobileno'
-              id='altmobileno'
+              name='altmobile'
+              id='altmobile'
               className={`form-control ${!isEditable ? 'blurred' : ''}`}
               placeholder='Enter Alternate Mobile Number'
               value={editStaff.altmobile}
@@ -311,7 +310,7 @@ const EditStaff = () => {
                         <option value=''>Select</option>
                         <option value="cook">Cook</option>
                         <option value="Sweeper">Sweeper</option>
-                        <option value='supervisor'>Supervisor</option>
+                        <option value='Supervisor'>Supervisor</option>
                         <option value='Helper'>Helper</option>
                     </select>
           </div>
@@ -324,7 +323,7 @@ const EditStaff = () => {
           <button
             type='button'
             className='btn btn-danger fw-bold  ms-5 '
-            onClick={() => setIsEditable(false)}  // Button to cancel edit
+            onClick={() => {setIsEditable(false); fetchStaffData()}}  // Button to cancel edit
           >
             Cancel
           </button>

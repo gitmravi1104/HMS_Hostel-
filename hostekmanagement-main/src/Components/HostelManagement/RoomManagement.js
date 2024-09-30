@@ -164,7 +164,7 @@ const RoomManagement = () => {
     <div className='container-fluid mt-3'>
       <h4 className='text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark'>Room Management</h4>
       <div className='mt-2 ms-3'>
-        <div className='ms-5 mt-3'>
+        <div className='ms-3 mt-3'>
           <button className='btn btn-info fw-bold ' onClick={HandleNewRoom}>Add Room </button>  {/*<i className="fa-solid fa-plus ms-2"></i>*/}
         </div>
       </div>

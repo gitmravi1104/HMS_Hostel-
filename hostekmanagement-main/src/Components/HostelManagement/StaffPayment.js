@@ -21,6 +21,7 @@ export default function StaffPayment() {
     designation:'',
     paymentDate:'',
     paymentAmount:'',
+    advPayment:"",
     paymentStatus: 'Unpaid'
     }
   );
@@ -40,6 +41,7 @@ export default function StaffPayment() {
     try{
     const res = await HostelManagementService.getStaffPaymentDetailsByHostelName();
     setPaymentDetails(res.data);
+    console.log(res.data)
     }
     catch(error)
     {
@@ -59,7 +61,12 @@ export default function StaffPayment() {
             name:item.name,
             mobileno:item.mobile,
             paymentStatus: item.paymentStatus,
-            designation:item.designation
+            designation:item.designation,
+            dateOfJoining:item.dateOfJoining,
+            advPayment:item.advPayment,
+            paymentAmount:item.paymentAmount,
+            paymentDate:item.paymentDate
+            
       
           }) 
           console.log(item)
@@ -77,7 +84,8 @@ export default function StaffPayment() {
       try {
 
         const res=await HostelManagementService.getPaymentDetailsByHostelName();
-        setPaymentDetails(res.data);
+        setPaymentData(res.data);
+        console.log(res.data)
         
       } catch (error) {
         console.log(error)
@@ -98,13 +106,14 @@ export default function StaffPayment() {
    
   
       const data={
-
+        id:paymentData.id,
         mobile:paymentData.mobileno,
         name:paymentData.name,
         designation:paymentData.designation,
         paymentStatus:paymentData.paymentStatus,
         paymentAmount:paymentData.paymentAmount,
         paymentDate:paymentData.paymentDate,
+        advPayment:paymentData.advPayment,
         hostel:{
           hostelName:"SSR"
         }
@@ -113,14 +122,17 @@ export default function StaffPayment() {
       try {
         const res= await HostelManagementService.addStaffPayment(data);
         console.log(res.data)
+        handlePaymentDetails();
       console.log(res.data)
       } catch (error) {
         console.log(error)
         // alert(error.response.data)
         
       }    
-  
+      handlePaymentDetails();
       handleClose();
+
+    
       
       // handlePaymentDetails();
      
@@ -143,10 +155,11 @@ export default function StaffPayment() {
 
   return (
     <>
+      <div className='container-fluid mt-3'>
       <div className='row'>
-      <h3 className='fs-bold text-secondary text-center '>Payment History</h3>
+      <h4 className=' text-primar my-2 rounded py-2 text-center text-light fw-bold bg-dark'>Payment History</h4>
       <div className='col-6 my-3  '>
-          <p className='fw-semibold ms-lg-5 '>Total Number of Hostelers: <span className='fw-bold'> {results.length}</span></p>
+          <p className='fw-semibold ms-lg-5 '>Total Number of Payments: <span className='fw-bold'> {results.length}</span></p>
         </div>
         <div className='col-6 my-3 d-flex justify-content-end '>
           <input
@@ -159,25 +172,31 @@ export default function StaffPayment() {
           
           
         </div>
-        {notFound && <span className='text-danger  text-center '>No Hostelers Found.</span>}
+        {notFound && <span className='text-danger  text-center '>No Payments Found.</span>}
           {searchTerm && !notFound && (
-            <span className="text-dark m text-center">{results.length} Hosteler(s) Found.</span>
+            <span className="text-dark m text-center">{results.length} Payment(s) Found.</span>
           )}
       </div>
 
 
       <div className='mt-2 ms-3'>
-        <div className='ms-5 mt-3'>
+        <div className=' mt-3'>
           <table className='table table-striped-columns table-bordered table-hover border-dark mt-lg-4'>
             <thead className='text-center'>
               <tr>
-                <th className='text-primary'>Sl.No.</th>
-                <th className='text-primary'>Name</th>
-                <th className='text-primary'>Mobile No.</th>
-                <th className='text-primary'>DOJ</th>
-                <th className='text-primary'>Amount</th>
-                <th className='text-primary'>Payment Status</th>
+                <th rowSpan="2" className='text-primary'>Sl.No.</th>
+                <th rowSpan="2" className='text-primary'>Name</th>
+                <th rowSpan="2" className='text-primary'>Mobile No.</th>
+                <th rowSpan="2" className='text-primary'>DOJ</th>
+                <th colSpan="3" className='text-primary'>Amount</th>
+                <th rowSpan="2" className='text-primary'>Payment Status</th>
               </tr>
+              <tr>
+                   <th className='text-primary'>Adv Payment </th> {/* Sub-column 1 */}
+                   <th className='text-primary' >Payment</th> {/* Sub-column 2 */}
+                   <th className='text-primary'>Total Payment</th>
+             </tr>
+             
             </thead>
             <tbody className='text-center'>
               {results.map((item, index) => (
@@ -185,8 +204,10 @@ export default function StaffPayment() {
                   <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.mobile}</td>
-                  <td>{item.paymentDate}</td>
-                  <th>{item.paymentAmount}</th>
+                  <td>{item.dateOfJoining}</td>
+                  <td>{item.advPayment}</td>
+                  <td >{item.paymentAmount}</td>
+                  <td>{parseFloat(item.advPayment) + parseFloat(item.paymentAmount)}<b>/12000</b></td>
                   <td>
                         <button
                           className={` btn btn-paymentStatus ${item.paymentStatus === 'Paid' ? 'btn-success px-5' : 'btn-danger px-4'}`}
@@ -205,13 +226,13 @@ export default function StaffPayment() {
       <Modal show={showPaymentModal} onHide={handleClose} backdrop="static"   dialogClassName="custom-modal-dialog" 
   className="custom-modal">
   <Modal.Header closeButton>
-    <Modal.Title className='text-secondary text-center'>Add Hosteler</Modal.Title>
+    <Modal.Title className='fw-bold text-center'>Staff Payment Details</Modal.Title>
   </Modal.Header>
   <Modal.Body className='mx-3'>
     <form className='ms-2 ' onSubmit={HandleSubmit}>
       {/* Personal Details Section */}
       <div className='mb-3'>
-        <h5 className='text-primary text-center fw-bold'>Personal Details</h5>
+        <h5 className='text-primary text-center fw-bold'>Basic Details</h5>
         <div className='row'>
           <div className='col-4 '>
             <label className='form-label fw-bold' htmlFor='name'>Name:</label>
@@ -246,12 +267,12 @@ export default function StaffPayment() {
             />
           </div>
           <div className='col-4'>
-          <label className="form-label fw-bold mt-1 col-5" htmlFor="designation">Designation:- </label>
+          <label className="form-label fw-bold mt-1 col-5" htmlFor="designation">Designation: </label>
                   <select className="form-control w-100 blurred" name="designation" id="designation" value={paymentData.designation} onChange={HandleChange} required>
                         <option value=''>Select</option>
                         <option value="cook">Cook</option>
                         <option value="Sweeper">Sweeper</option>
-                        <option value='supervisor'>Supervisor</option>
+                        <option value='Supervisor'>Supervisor</option>
                         <option value='Helper'>Helper</option>
                     </select>
           </div>
@@ -261,10 +282,10 @@ export default function StaffPayment() {
 
       {/* Date & Room Details Section */}
       <div className='mb-3'>
-        <h5 className='text-primary fw-bold text-center'>Date & Room Details</h5>
+        <h5 className='text-primary fw-bold text-center'>Payment Details</h5>
         <div className='row'>
      
-          <div className='col-4'>
+          <div className='col-3'>
             <label className='form-label fw-bold' htmlFor='dueDate'>Payment Date</label>
             <input
               type='date'
@@ -276,7 +297,19 @@ export default function StaffPayment() {
               required
             />
           </div>
-          <div className='col-4'>
+          <div className='col-3'>
+            <label className='form-label fw-bold' htmlFor='advPayment'>Advance Payment:</label>
+            <input
+              type='text'
+              name='advPayment'
+              id='advPayment'
+              className='form-control '
+              value={paymentData.advPayment}
+              onChange={HandleChange}
+              required
+            />
+          </div>
+          <div className='col-3'>
             <label className='form-label fw-bold' htmlFor='paymentAmount'>Amount:</label>
             <input
               type='text'
@@ -288,7 +321,7 @@ export default function StaffPayment() {
               required
             />
           </div>
-          <div className='col-4'>
+          <div className='col-3'>
           <label className="form-label fw-bold mt-1 " htmlFor="paymentStatus">Payment Status: </label>
                   <select className="form-control w-100" name="paymentStatus" id="paymentStatus" value={paymentData.paymentStatus} onChange={HandleChange} required>
                         <option value=''>Select</option>
@@ -308,6 +341,7 @@ export default function StaffPayment() {
     </form>
   </Modal.Body>
 </Modal>
+</div>
     </>
   );
 }
